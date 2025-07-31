@@ -2,13 +2,13 @@ import AuthForm from '@/components/auth/AuthForm'
 
 export default function SignupPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h1 className="mt-6 text-center text-3xl font-bold text-gray-900">
+          <h1 className="mt-6 text-center text-3xl font-bold text-blue-900">
             Create a new account
           </h1>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-purple-600">
             Join our AI-powered blogging platform
           </p>
         </div>

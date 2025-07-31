@@ -57,7 +57,7 @@ export default function AuthForm({ type }: { type: 'login' | 'signup' }) {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-green-500 rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-center">
         {type === 'login' ? 'Login' : 'Sign Up'}
       </h2>
@@ -71,7 +71,7 @@ export default function AuthForm({ type }: { type: 'login' | 'signup' }) {
       <form onSubmit={handleSubmit}>
         {type === 'signup' && (
           <div className="mb-4">
-            <label htmlFor="username" className="block text-green-700 mb-2">
+            <label htmlFor="username" className="block mb-2">
               Username
             </label>
             <input
@@ -87,7 +87,7 @@ export default function AuthForm({ type }: { type: 'login' | 'signup' }) {
         )}
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-green-700 mb-2">
+          <label htmlFor="email" className="block mb-2">
             Email
           </label>
           <input
@@ -101,7 +101,7 @@ export default function AuthForm({ type }: { type: 'login' | 'signup' }) {
         </div>
 
         <div className="mb-6">
-          <label htmlFor="password" className="block text-green-700 mb-2">
+          <label htmlFor="password" className="block mb-2">
             Password
           </label>
           <input
