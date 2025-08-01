@@ -72,11 +72,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         <PostInteractions postId={post.id} />
       </article>
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+  let message = "An unexpected error occurred";
+
+  if (error instanceof Error) {
+    message = error.message;
+  }
     return (
       <div className="max-w-3xl mx-auto py-12">
         <h1 className="text-2xl font-bold">Error</h1>
-        <p className="mt-4">{error.message}</p>
+        <p className="mt-4">{message}</p>
       </div>
     );
   }

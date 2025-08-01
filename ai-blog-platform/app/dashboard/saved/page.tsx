@@ -8,9 +8,20 @@ import LoadingSpinner from '@/components/ui/loading-spinner'
 
 export default function SavedPostsPage() {
   const { user } = useAuth()
-  const [savedPosts, setSavedPosts] = useState<any[]>([])
+  const [savedPosts, setSavedPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  type BlogPost = {
+    id: string;
+    title: string;
+    slug: string;
+    created_at: string;
+    keywords?: string[] | undefined;
+    profile?: {
+        username: string;
+    } | undefined;
+  }
 
   useEffect(() => {
     if (!user) return
@@ -55,8 +66,12 @@ export default function SavedPostsPage() {
         }))
         
         setSavedPosts(postsWithUsernames)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        let message = "An unknown Error occured";
+        if(err instanceof Error){
+          message = err.message;
+        }
+        setError(message)
       } finally {
         setLoading(false)
       }

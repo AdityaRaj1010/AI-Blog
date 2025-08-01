@@ -14,7 +14,7 @@ export default function NewPostPage() {
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [seoData, setSeoData] = useState<any>(null)
+  const [seoData, setSeoData] = useState<unknown>(null)
   const [keywords, setKeywords] = useState<string[]>([])
 
   const handleContentChange = (html: string) => {
@@ -47,8 +47,12 @@ export default function NewPostPage() {
       
       if (error) throw error
       router.push(`/blog/${slug}`)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      let message = "An unknown Error occured";
+      if(err instanceof Error){
+        message = err.message
+      }
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }

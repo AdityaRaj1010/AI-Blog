@@ -58,11 +58,15 @@ export default async function SearchPage({
         </div>
       </div>
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let message = "An unknown Error occured";
+    if(error instanceof Error){
+      message = error.message;
+    }
     return (
       <div className="max-w-4xl mx-auto py-12">
         <h1 className="text-3xl font-bold mb-8">Error</h1>
-        <p>{error.message}</p>
+        <p>{message}</p>
       </div>
     )
   }

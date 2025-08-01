@@ -69,7 +69,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ content: formattedContent })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[DEBUG] AI Generation Error:', error)
 
     const localFallback = `<p>${prompt} is a fascinating topic. This is placeholder content since the AI model is not available.</p>

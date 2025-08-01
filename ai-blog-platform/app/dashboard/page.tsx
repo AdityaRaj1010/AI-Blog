@@ -10,9 +10,20 @@ import LoadingSpinner from '@/components/ui/loading-spinner'
 
 export default function DashboardPage() {
   const { user } = useAuth()
-  const [posts, setPosts] = useState<any[]>([])
+  const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  type BlogPost = {
+    id: string;
+    title: string;
+    slug: string;
+    created_at: string;
+    keywords?: string[] | undefined;
+    profile?: {
+        username: string;
+    } | undefined;
+  }
 
   useEffect(() => {
     if (!user) return
@@ -46,8 +57,12 @@ export default function DashboardPage() {
         }))
         
         setPosts(postsWithUsernames)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        let message = "An unknown Error occured";
+        if(err instanceof Error){
+          message = err.message;
+        }
+        setError(message)
       } finally {
         setLoading(false)
       }
@@ -68,8 +83,12 @@ export default function DashboardPage() {
 
       if (error) throw error
       setPosts(posts.filter(post => post.id !== postId))
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      let message = "An unknown Error occured";
+      if(err instanceof Error){
+        message = err.message;
+      }
+      setError(message)
     }
   }
 

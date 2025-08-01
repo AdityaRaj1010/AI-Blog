@@ -19,8 +19,12 @@ export default function SettingsPage() {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       router.push('/login')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      let message = "An unknown Error occured";
+      if(err instanceof Error){
+        message = err.message;
+      }
+      setError(message)
     } finally {
       setLoading(false)
     }

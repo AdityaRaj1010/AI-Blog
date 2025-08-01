@@ -15,8 +15,19 @@ export default function PostInteractions({ postId }: InteractionsProps) {
   const [liked, setLiked] = useState(false)
   const [saved, setSaved] = useState(false)
   const [comment, setComment] = useState('')
-  const [comments, setComments] = useState<any[]>([])
+  const [comments, setComments] = useState<Comment[]>([])
   const [showComments, setShowComments] = useState(false)
+
+  type Profile = {
+    username?: string;
+  };
+
+  type Comment = {
+    id: string;
+    content: string;
+    created_at: string;
+    profiles?: Profile;
+  };
 
   useEffect(() => {
     const fetchInteractions = async () => {
@@ -30,10 +41,22 @@ export default function PostInteractions({ postId }: InteractionsProps) {
       // Fetch comments
       const { data: commentsData } = await supabase
         .from('comments')
-        .select('id, content, created_at, profiles:user_id (username)')
+        .select('id, content, created_at, profiles:profiles!user_id (username)')
         .eq('post_id', postId)
-        .order('created_at', { ascending: false })
-      setComments(commentsData || [])
+        .order('created_at', { ascending: false });
+      if (commentsData) {
+        const typedComments: Comment[] = commentsData.map((comment): Comment => ({
+          id: comment.id,
+          content: comment.content,
+          created_at: comment.created_at,
+          profiles: Array.isArray(comment.profiles)
+            ? comment.profiles[0]
+            : comment.profiles,
+        }));
+
+        setComments(typedComments);
+      }
+
 
       // Check if user has liked/saved
       if (user) {
@@ -100,37 +123,47 @@ export default function PostInteractions({ postId }: InteractionsProps) {
 
     const { data } = await supabase
       .from('comments')
-      .insert({ 
-        post_id: postId, 
-        user_id: user.id, 
-        content: comment 
+      .insert({
+        post_id: postId,
+        user_id: user.id,
+        content: comment
       })
-      .select('id, content, created_at, profiles:user_id (username)')
+      .select('id, content, created_at, profiles:profiles!user_id (username)')
       .single()
 
     if (data) {
-      setComments([data, ...comments])
-      setComment('')
+      const newComment: Comment = {
+        id: data.id,
+        content: data.content,
+        created_at: data.created_at,
+        profiles: Array.isArray(data.profiles)
+          ? data.profiles[0]
+          : data.profiles,
+      };
+
+      setComments([newComment, ...comments]);
+      setComment('');
     }
+
   }
 
   return (
     <div className="mt-12 border-t pt-8">
       <div className="flex gap-4 mb-8">
-        <Button 
-          onClick={handleLike} 
+        <Button
+          onClick={handleLike}
           variant={liked ? 'primary' : 'outline'}
         >
           {liked ? 'Liked' : 'Like'} ({likes})
         </Button>
-        <Button 
-          onClick={() => setShowComments(!showComments)} 
+        <Button
+          onClick={() => setShowComments(!showComments)}
           variant="outline"
         >
           Comment ({comments.length})
         </Button>
-        <Button 
-          onClick={handleSave} 
+        <Button
+          onClick={handleSave}
           variant={saved ? 'primary' : 'outline'}
         >
           {saved ? 'Saved' : 'Save'}
@@ -140,7 +173,7 @@ export default function PostInteractions({ postId }: InteractionsProps) {
       {showComments && (
         <div className="mt-6">
           <h3 className="text-xl font-semibold mb-4">Comments</h3>
-          
+
           <form onSubmit={handleCommentSubmit} className="mb-6">
             <textarea
               value={comment}
@@ -153,7 +186,7 @@ export default function PostInteractions({ postId }: InteractionsProps) {
               Post Comment
             </Button>
           </form>
-          
+
           <div className="space-y-4">
             {comments.map(comment => (
               <div key={comment.id} className="border-b pb-4">

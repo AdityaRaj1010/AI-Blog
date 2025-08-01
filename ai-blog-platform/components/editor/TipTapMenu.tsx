@@ -81,7 +81,7 @@ export default function TipTapMenu({
             key={index}
             onClick={item.action}
             className={`p-2 rounded ${
-              item.isActive ? 'bg-cyan-800' : 'hover:bg-pink-800'
+              item.isActive ? 'bg-blue-500' : 'hover:bg-green-600'
             }`}
             title={item.icon.replace('-', ' ')}
           >

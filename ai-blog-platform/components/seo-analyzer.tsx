@@ -2,9 +2,16 @@
 
 import { useState, useEffect } from 'react'
 
+type SEOData = {
+  keywords: string[]
+  readability: number
+  metaDescription: string
+  wordCount: number
+}
+
 type SEOAnalyzerProps = {
   content: string
-  onAnalysisComplete: (data: any) => void
+  onAnalysisComplete: (data: SEOData) => void
   onKeywordsChange: (keywords: string[]) => void
   initialKeywords?: string[]
 }
@@ -16,7 +23,7 @@ export default function SEOAnalyzer({
   initialKeywords = []
 }: SEOAnalyzerProps) {
   const [keywords, setKeywords] = useState<string[]>(initialKeywords)
-  const [seoData, setSeoData] = useState<any>(null)
+  const [seoData, setSeoData] = useState<SEOData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -43,8 +50,12 @@ export default function SEOAnalyzer({
       setSeoData(data)
       onAnalysisComplete(data)
       onKeywordsChange(data.keywords || [])
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      let message = "An unknown Error occured";
+      if(err instanceof Error){
+        message = err.message;
+      }
+      setError(message)
     } finally {
       setIsLoading(false)
     }

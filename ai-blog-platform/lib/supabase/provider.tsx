@@ -3,12 +3,20 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from './client'
 import { useRouter } from 'next/navigation'
+import type { User } from '@supabase/supabase-js';
 
-const AuthContext = createContext<any>(null)
+const AuthContext = createContext<AuthContextType | null>(null)
+
+type AuthContextType = {
+  session: unknown;
+  user: { id: string; email?: string } | null;
+  loading: boolean;
+  supabase: typeof supabase;
+};
 
 export const SupabaseProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<any>(null)
-  const [user, setUser] = useState<any>(null)
+  const [session, setSession] = useState<unknown>(null)
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
@@ -41,9 +49,9 @@ export const SupabaseProvider = ({ children }: { children: React.ReactNode }) =>
   )
 }
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within a SupabaseProvider')
   }
   return context

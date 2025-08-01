@@ -17,8 +17,12 @@ export const generateContent = async (prompt: string): Promise<string> => {
     }
     
     return result.content
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let message = "An unknown Error occured";
+    if(error instanceof Error){
+      message = error.message;
+    }
     console.error('AI Generation Error:', error)
-    throw new Error(error.message || 'Failed to generate content. Please try again later.')
+    throw new Error(message || 'Failed to generate content. Please try again later.')
   }
 }

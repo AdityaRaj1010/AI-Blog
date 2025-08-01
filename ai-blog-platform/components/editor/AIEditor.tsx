@@ -85,10 +85,14 @@ export default function AIEditor({
       // editor.commands.setTextSelection(from + generatedContent.length)
 
       setGenerationPrompt('')
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let message = "An unknown Error occured";
+      if(error instanceof Error){
+        message = error.message;
+      }
       console.error('Generation failed:', error)
       editor.commands.insertContent(
-        `<p class="text-red-500">${error.message}</p>`
+        `<p class="text-red-500">${message}</p>`
       )
     } finally {
       setIsGenerating(false)

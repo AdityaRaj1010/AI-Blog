@@ -10,14 +10,25 @@ import Button from '@/components/ui/button'
 
 export default function EditPostPage() {
   const router = useRouter()
-  const params = useParams() // Use the useParams hook
-  const [post, setPost] = useState<any>(null)
+  const params = useParams()
+  const [post, setPost] = useState<BlogPost | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [seoData, setSeoData] = useState<any>(null)
+  const [seoData, setSeoData] = useState<unknown>(null)
   const [keywords, setKeywords] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+
+  type BlogPost = {
+    id: string;
+    title: string;
+    slug: string;
+    created_at: string;
+    keywords?: string[] | undefined;
+    profile?: {
+      username: string;
+    } | undefined;
+  }
 
   // Get the id from params
   const id = Array.isArray(params.id) ? params.id[0] : params.id
@@ -28,20 +39,24 @@ export default function EditPostPage() {
         const { data, error } = await supabase
           .from('posts')
           .select('*')
-          .eq('id', id) // Use the id from useParams
+          .eq('id', id)
           .single()
-        
+
         if (error) throw error
-        
+
         setPost(data)
         setTitle(data.title)
         setContent(data.content)
         setKeywords(data.keywords || [])
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        let message = "An unknown Error occured";
+        if (err instanceof Error) {
+          message = err.message;
+        }
+        setError(message)
       }
     }
-    
+
     if (id) {
       fetchPost()
     }
@@ -55,12 +70,12 @@ export default function EditPostPage() {
     e.preventDefault()
     setIsSubmitting(true)
     setError(null)
-    
+
     try {
       if (!title || !content) {
         throw new Error('Title and content are required')
       }
-      
+
       const slug = generateSlug(title)
       const { error } = await supabase
         .from('posts')
@@ -72,11 +87,15 @@ export default function EditPostPage() {
           updated_at: new Date().toISOString()
         })
         .eq('id', id) // Use the id from useParams
-      
+
       if (error) throw error
       router.push(`/blog/${slug}`)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      let message = "An unknown Error occured";
+      if (err instanceof Error) {
+        message = err.message
+      }
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -95,7 +114,7 @@ export default function EditPostPage() {
       <div className="max-w-3xl mx-auto py-12">
         <h1 className="text-2xl font-bold">Error</h1>
         <p className="mt-4">{error}</p>
-        <Button 
+        <Button
           onClick={() => router.push('/dashboard')}
           className="mt-4"
         >
@@ -108,13 +127,13 @@ export default function EditPostPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Edit Post</h1>
-      
+
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
           <label htmlFor="title" className="block text-gray-700 mb-2">
@@ -130,24 +149,24 @@ export default function EditPostPage() {
             required
           />
         </div>
-        
+
         <div className="mb-6">
           <label className="block text-gray-700 mb-2">
             Content
           </label>
-          <AIEditor 
+          <AIEditor
             initialContent={content}
-            onContentChange={handleContentChange} 
+            onContentChange={handleContentChange}
           />
         </div>
-        
-        <SEOAnalyzer 
-          content={content} 
-          onAnalysisComplete={setSeoData} 
+
+        <SEOAnalyzer
+          content={content}
+          onAnalysisComplete={setSeoData}
           onKeywordsChange={setKeywords}
           initialKeywords={keywords}
         />
-        
+
         <div className="mt-8 flex gap-4">
           <Button
             type="submit"
@@ -156,10 +175,12 @@ export default function EditPostPage() {
           >
             Update Post
           </Button>
-          
+
           <Button
             type="button"
-            onClick={() => router.push(`/blog/${post.slug}`)}
+            onClick={() => {
+              if (post) { router.push(`/blog/${post.slug}`) }
+            }}
             variant="outline"
           >
             Cancel

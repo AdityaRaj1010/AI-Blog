@@ -47,11 +47,15 @@ export default async function Home() {
         </section>
       </div>
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let message = "An unknown Error occured";
+    if(error instanceof Error){
+      message = error.message;
+    }
     return (
       <div className="max-w-3xl mx-auto py-12">
         <h1 className="text-2xl font-bold">Error Loading Posts</h1>
-        <p>{error.message}</p>
+        <p>{message}</p>
       </div>
     )
   }

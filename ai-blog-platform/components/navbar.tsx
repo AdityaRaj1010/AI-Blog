@@ -17,22 +17,22 @@ export default function Navbar() {
             AI Blog
           </Link>
 
-          <div className="hidden md:flex space-x-6">
+          <div className="hidden md:flex">
             <Link
               href="/"
-              className={`hover:text-primary ${pathname === '/' ? 'text-primary font-medium' : ''}`}
+              className={`px-4 py-2 bg-primary rounded-md hover:bg-blue-500 hover:text-primary ${pathname === '/' ? 'text-primary font-medium' : ''}`}
             >
               Home
             </Link>
             <Link
               href="/blog"
-              className={`hover:text-primary ${pathname.startsWith('/blog') ? 'text-primary font-medium' : ''}`}
+              className={`px-4 py-2 bg-primary rounded-md hover:bg-blue-500 hover:text-primary ${pathname.startsWith('/blog') ? 'text-primary font-medium' : ''}`}
             >
               Blog
             </Link>
             <Link
               href="/about"
-              className={`hover:text-primary ${pathname === '/about' ? 'text-primary font-medium' : ''}`}
+              className={`px-4 py-2 bg-primary rounded-md hover:bg-blue-500 hover:text-primary ${pathname === '/about' ? 'text-primary font-medium' : ''}`}
             >
               About
             </Link>
@@ -43,18 +43,18 @@ export default function Navbar() {
           <Search />
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center">
           {user ? (
             <>
               <Link
                 href="/dashboard"
-                className="px-4 py-2 bg-primary rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-primary rounded-md hover:bg-blue-500"
               >
                 Dashboard
               </Link>
               <button
                 onClick={() => supabase.auth.signOut()}
-                className="text-red-600 hover:text-primary"
+                className="text-red-600 hover:text-primary px-4 py-2 bg-primary rounded-md hover:bg-red-600 hover:text-red-100"
               >
                 Logout
               </button>
