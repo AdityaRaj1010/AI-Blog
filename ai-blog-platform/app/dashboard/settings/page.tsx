@@ -21,7 +21,7 @@ export default function SettingsPage() {
       router.push('/login')
     } catch (err: unknown) {
       let message = "An unknown Error occured";
-      if(err instanceof Error){
+      if (err instanceof Error) {
         message = err.message;
       }
       setError(message)
@@ -33,28 +33,28 @@ export default function SettingsPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Account Settings</h1>
-      
+
       <div className="max-w-lg space-y-6">
         {error && (
           <div className="bg-red-100 text-red-700 p-3 rounded">
             {error}
           </div>
         )}
-        
+
         {success && (
           <div className="bg-green-100 text-green-700 p-3 rounded">
             {success}
           </div>
         )}
-        
+
         <div className="border rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-4">Account Information</h2>
           <div className="space-y-2">
             <p><strong>Email:</strong> {user?.email}</p>
-            <p><strong>Account Created:</strong> {new Date(user?.created_at).toLocaleDateString()}</p>
+            <p><strong>Account Created:</strong>{' '} {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}</p>
           </div>
         </div>
-        
+
         <div className="border rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-4">Security</h2>
           <Button variant="outline" className="mb-3">
@@ -64,7 +64,7 @@ export default function SettingsPage() {
             Two-Factor Authentication
           </Button>
         </div>
-        
+
         <div className="border rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-4">Danger Zone</h2>
           <Button

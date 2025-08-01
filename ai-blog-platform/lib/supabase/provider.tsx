@@ -7,9 +7,15 @@ import type { User } from '@supabase/supabase-js';
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
+type SupabaseUser = {
+  id: string;
+  email?: string;
+  created_at?: string;
+}
+
 type AuthContextType = {
   session: unknown;
-  user: { id: string; email?: string } | null;
+  user: SupabaseUser | null;
   loading: boolean;
   supabase: typeof supabase;
 };

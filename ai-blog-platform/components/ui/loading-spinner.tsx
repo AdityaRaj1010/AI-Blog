@@ -2,9 +2,10 @@ import React from 'react'
 
 type LoadingSpinnerProps = {
   size?: 'sm' | 'md' | 'lg'
+  className?: string
 }
 
-export default function LoadingSpinner({ size = 'md' }: LoadingSpinnerProps) {
+export default function LoadingSpinner({ size = 'md', className = '' }: LoadingSpinnerProps) {
   const sizeClasses = {
     sm: 'h-5 w-5',
     md: 'h-8 w-8',
@@ -12,7 +13,7 @@ export default function LoadingSpinner({ size = 'md' }: LoadingSpinnerProps) {
   }
 
   return (
-    <div className="flex justify-center items-center">
+    <div className={`flex justify-center items-center ${className}`}>
       <svg 
         className={`animate-spin ${sizeClasses[size]} text-primary`}
         xmlns="http://www.w3.org/2000/svg" 
