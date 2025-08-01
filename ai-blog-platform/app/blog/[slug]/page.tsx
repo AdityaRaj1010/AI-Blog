@@ -6,9 +6,9 @@ import PostInteractions from '@/components/post-interactions'
 
 export const dynamic = 'force-dynamic'
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: {params: Promise<{ slug: string }>;}) {
   // Get slug from params
-  const { slug } = params;
+  const { slug } = await params;
   const normalizedSlug = slug.toLowerCase();
 
   // Create Supabase client with cookies
