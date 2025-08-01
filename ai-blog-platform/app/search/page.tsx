@@ -4,9 +4,9 @@ import BlogCard from '@/components/blog-card'
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string }
+  searchParams: Promise<{ q?: string }>;
 }) {
-  const query = searchParams.q?.trim() || ''
+  const query = (await searchParams).q?.trim() || ''
   
   if (!query) {
     return (
