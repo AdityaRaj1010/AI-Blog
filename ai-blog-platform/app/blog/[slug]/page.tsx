@@ -8,11 +8,11 @@ export const dynamic = 'force-dynamic'
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   // Get slug from params
-  const { slug } = await params;
+  const { slug } = params;
   const normalizedSlug = slug.toLowerCase();
 
   // Create Supabase client with cookies
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
   try {
