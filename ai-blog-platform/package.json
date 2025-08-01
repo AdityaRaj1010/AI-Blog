@@ -19,7 +19,6 @@
     "jsdom": "^26.1.0",
     "material-design-icons": "^3.0.1",
     "material-icons": "^1.13.14",
-    "natural": "^8.1.0",
     "next": "15.4.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
