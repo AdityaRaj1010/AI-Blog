@@ -1,47 +1,50 @@
 import { NextResponse } from 'next/server'
-import * as natural from 'natural'
-// import * as textstat from 'textstat'
-import textReadability from 'text-readability';
+import textReadability from 'text-readability'
 
 export async function POST(req: Request) {
   const { content } = await req.json()
-  
+
   try {
-    // Removing HTML tags for text analysis
-    const cleanContent = content.replace(/<[^>]*>/g, ' ')
-    
-    // Keyword extraction
-    const tokenizer = new natural.WordTokenizer()
-    const tokens = tokenizer.tokenize(cleanContent) || []
-    
-    // TF-IDF implementation
-    const tfidf = new natural.TfIdf()
-    tfidf.addDocument(cleanContent)
-    
-    const keywords: string[] = []
-    tfidf.listTerms(0).forEach(item => {
-      if (item.tfidf > 0.3 && item.term.length > 4) {
-        keywords.push(item.term)
-      }
-    })
-    
+    // Remove HTML tags
+    const cleanContent = content.replace(/<[^>]*>/g, ' ').toLowerCase()
+
+    // Tokenize (remove punctuation, split on spaces)
+    const tokens = cleanContent
+      .replace(/[^\w\s]/g, '')
+      .split(/\s+/)
+      .filter(Boolean)
+
+    // Word frequency count
+    const wordFreq = new Map<string, number>()
+    for (const token of tokens) {
+      if (token.length < 4) continue // skip very short words
+      wordFreq.set(token, (wordFreq.get(token) || 0) + 1)
+    }
+
+    // Sort by frequency
+    const sorted = [...wordFreq.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([word]) => word)
+
+    // Use top 5 as keywords
+    const keywords = sorted.slice(0, 5)
+
     // Readability score
     const readability = textReadability.fleschReadingEase(cleanContent)
-    
-    // Suggested meta description
+
+    // Suggested meta description (first sentence)
     const sentences = cleanContent.split(/[.!?]/)
-    const metaDescription = sentences[0]?.substring(0, 160) + '...'
-    
+    const metaDescription = sentences[0]?.substring(0, 160).trim() + '...'
+
     // Word count
     const wordCount = tokens.length
-    
+
     return NextResponse.json({
-      keywords: keywords.slice(0, 5),
+      keywords,
       readability,
       metaDescription,
-      wordCount
+      wordCount,
     })
-    
   } catch (error) {
     console.error('SEO Analysis Error:', error)
     return NextResponse.json(
