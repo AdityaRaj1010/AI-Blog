@@ -67,5 +67,5 @@ AI Blog Platform is a Next.js-powered web application that leverages AI technolo
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/AI-Blog/ai-blog-platform
+   git clone https://github.com/AdityaRaj1010/AI-Blog
    cd ai-blog-platform
