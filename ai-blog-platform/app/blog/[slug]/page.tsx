@@ -12,7 +12,7 @@ export default async function BlogPostPage({ params }: {params: Promise<{ slug: 
   const normalizedSlug = slug.toLowerCase();
 
   // Create Supabase client with cookies
-  const cookieStore = cookies();
+  const cookieStore = (await cookies()) as unknown as ReturnType<typeof cookies>
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
   try {
