@@ -24,7 +24,7 @@ export async function POST(req: Request) {
           // "HTTP-Referer": "http://localhost:3000",
         },
         body: JSON.stringify({
-          model: "deepseek/deepseek-chat-v3-0324:free",
+          model: "deepseek/deepseek-r1-distill-llama-70b:free",
           messages: [
             {
               role: "system",
